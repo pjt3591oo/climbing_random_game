@@ -3,13 +3,22 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import RoomSetup from "@/components/RoomSetup";
+import KakaoShareButton from "@/components/KakaoShareButton";
 import { GameType } from "@/types/game";
 import Link from "next/link";
+
+const GAME_LABELS: Record<string, string> = {
+  roulette: "🎡 룰렛",
+  ladder: "🪜 사다리 타기",
+  card: "🃏 카드 뒤집기",
+  draw: "🎋 제비뽑기",
+};
 
 export default function Home() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [roomId, setRoomId] = useState<string | null>(null);
+  const [roomMeta, setRoomMeta] = useState<{ gameType: GameType; locations: string[] } | null>(null);
   const [copied, setCopied] = useState(false);
 
   const handleCreate = async (locations: string[], gameType: GameType) => {
@@ -22,6 +31,7 @@ export default function Home() {
     const data = await res.json();
     setLoading(false);
     setRoomId(data.id);
+    setRoomMeta({ gameType, locations });
   };
 
   const handleCopy = () => {
@@ -75,10 +85,18 @@ export default function Home() {
               >
                 지금 바로 참여하기
               </button>
+              {roomMeta && (
+                <KakaoShareButton
+                  type="room"
+                  roomUrl={`${typeof window !== "undefined" ? window.location.origin : ""}/room/${roomId}`}
+                  gameLabel={GAME_LABELS[roomMeta.gameType]}
+                  locations={roomMeta.locations}
+                />
+              )}
             </div>
 
             <button
-              onClick={() => setRoomId(null)}
+              onClick={() => { setRoomId(null); setRoomMeta(null); }}
               className="text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition"
             >
               새 방 만들기

@@ -2,7 +2,15 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { GamePlay, RoomLocation } from "@/types/game";
+import { GamePlay, GameType, RoomLocation } from "@/types/game";
+import KakaoShareButton from "@/components/KakaoShareButton";
+
+const GAME_LABELS: Record<string, string> = {
+  roulette: "🎡 룰렛",
+  ladder: "🪜 사다리 타기",
+  card: "🃏 카드 뒤집기",
+  draw: "🎋 제비뽑기",
+};
 
 interface Props {
   myNickname: string;
@@ -10,6 +18,7 @@ interface Props {
   plays: GamePlay[];
   locations: RoomLocation[];
   roomId: string;
+  gameType: GameType;
   onPlayAgain: () => void;
 }
 
@@ -19,8 +28,12 @@ export default function PlaySummary({
   plays,
   locations,
   roomId,
+  gameType,
   onPlayAgain,
 }: Props) {
+  const roomUrl = typeof window !== "undefined"
+    ? `${window.location.origin}/room/${roomId}`
+    : `/room/${roomId}`;
   const locationCounts = locations.map((loc) => {
     const matched = plays.filter((p) => p.result === loc.name);
     return {
@@ -109,6 +122,15 @@ export default function PlaySummary({
           ))}
         </div>
       </div>
+
+      {/* 카카오 공유 */}
+      <KakaoShareButton
+        type="result"
+        roomUrl={roomUrl}
+        nickname={myNickname}
+        result={myResult}
+        gameLabel={GAME_LABELS[gameType]}
+      />
 
       {/* 버튼 */}
       <div className="flex gap-3">

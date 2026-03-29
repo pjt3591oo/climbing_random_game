@@ -128,6 +128,7 @@ export default function RoomPage({
             plays={room.plays}
             locations={room.locations}
             roomId={id}
+            gameType={room.gameType}
             onPlayAgain={handlePlayAgain}
           />
         )}
