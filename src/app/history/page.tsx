@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { GameRoom } from "@/types/game";
 import Link from "next/link";
+import KakaoShareButton from "@/components/KakaoShareButton";
 
 const GAME_LABELS: Record<string, string> = {
   roulette: "🎡 룰렛",
@@ -94,16 +95,24 @@ export default function HistoryPage() {
                     </div>
                   )}
 
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-2">
                     <span className="text-sm text-zinc-500">
                       총 {room.plays.length}명 참여
                     </span>
-                    <Link
-                      href={`/room/${room.id}`}
-                      className="text-sm px-3 py-1.5 rounded-lg border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition"
-                    >
-                      방 입장
-                    </Link>
+                    <div className="flex items-center gap-2">
+                      <KakaoShareButton
+                        type="room"
+                        roomUrl={`${process.env.NEXT_PUBLIC_APP_URL || (typeof window !== "undefined" ? window.location.origin : "")}/room/${room.id}`}
+                        gameLabel={GAME_LABELS[room.gameType]}
+                        locations={room.locations.map((l) => l.name)}
+                      />
+                      <Link
+                        href={`/room/${room.id}`}
+                        className="text-sm px-3 py-1.5 rounded-lg border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition"
+                      >
+                        방 입장
+                      </Link>
+                    </div>
                   </div>
                 </div>
               );
