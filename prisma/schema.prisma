@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model GameRoom {
+  id        String         @id @default(cuid())
+  gameType  String
+  createdAt DateTime       @default(now())
+  locations RoomLocation[]
+  plays     GamePlay[]
+}
+
+model RoomLocation {
+  id         String   @id @default(cuid())
+  name       String
+  gameRoomId String
+  gameRoom   GameRoom @relation(fields: [gameRoomId], references: [id], onDelete: Cascade)
+}
+
+model GamePlay {
+  id         String   @id @default(cuid())
+  nickname   String
+  result     String
+  playedAt   DateTime @default(now())
+  gameRoomId String
+  gameRoom   GameRoom @relation(fields: [gameRoomId], references: [id], onDelete: Cascade)
+}
