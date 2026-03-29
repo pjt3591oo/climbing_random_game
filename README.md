@@ -2,7 +2,7 @@
 
 클라이밍 모임에서 오늘 갈 장소를 미니게임으로 재미있게 결정하는 웹 앱
 
-**🔗 [randomgame-bice.vercel.app](https://randomgame-bice.vercel.app)**
+**🔗 [https://randomgame-mocha.vercel.app/](https://randomgame-mocha.vercel.app/)**
 
 ## 사용 방법
 

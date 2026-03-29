@@ -33,13 +33,15 @@ export default function KakaoShareButton(props: Props) {
       window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY);
     }
 
+    const imageUrl = `${window.location.origin}/opengraph-image`;
+
     if (props.type === "room") {
       window.Kakao.Share.sendDefault({
         objectType: "feed",
         content: {
           title: `🧗 클라이밍 랜덤 게임에 초대합니다!`,
           description: `게임: ${props.gameLabel}\n후보 장소: ${props.locations.join(", ")}\n\n링크를 눌러 참여하세요!`,
-          imageUrl: "https://randomgame-bice.vercel.app/og-image.png",
+          imageUrl,
           link: {
             mobileWebUrl: props.roomUrl,
             webUrl: props.roomUrl,
@@ -61,7 +63,7 @@ export default function KakaoShareButton(props: Props) {
         content: {
           title: `🏆 ${props.nickname}의 클라이밍 장소가 결정됐어요!`,
           description: `📍 ${props.result}\n게임: ${props.gameLabel}\n\n링크를 눌러 함께 참여하세요!`,
-          imageUrl: "https://randomgame-bice.vercel.app/og-image.png",
+          imageUrl,
           link: {
             mobileWebUrl: props.roomUrl,
             webUrl: props.roomUrl,
