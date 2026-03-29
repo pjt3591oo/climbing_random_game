@@ -78,6 +78,22 @@ export default function HistoryPage() {
                     ))}
                   </div>
 
+                  {/* 참가자 목록 */}
+                  {room.plays.length > 0 && (
+                    <div className="mb-3 flex flex-wrap gap-1.5">
+                      {room.plays.map((play) => (
+                        <span
+                          key={play.id}
+                          className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
+                        >
+                          <span className="font-medium">{play.nickname}</span>
+                          <span className="text-zinc-400 dark:text-zinc-500">→</span>
+                          <span>📍 {play.result}</span>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-zinc-500">
                       총 {room.plays.length}명 참여
