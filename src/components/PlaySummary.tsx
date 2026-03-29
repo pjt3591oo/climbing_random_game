@@ -31,9 +31,8 @@ export default function PlaySummary({
   gameType,
   onPlayAgain,
 }: Props) {
-  const roomUrl = typeof window !== "undefined"
-    ? `${window.location.origin}/room/${roomId}`
-    : `/room/${roomId}`;
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (typeof window !== "undefined" ? window.location.origin : "");
+  const roomUrl = `${baseUrl}/room/${roomId}`;
   const locationCounts = locations.map((loc) => {
     const matched = plays.filter((p) => p.result === loc.name);
     return {

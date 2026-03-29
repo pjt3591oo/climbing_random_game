@@ -88,7 +88,7 @@ export default function Home() {
               {roomMeta && (
                 <KakaoShareButton
                   type="room"
-                  roomUrl={`${typeof window !== "undefined" ? window.location.origin : ""}/room/${roomId}`}
+                  roomUrl={`${process.env.NEXT_PUBLIC_APP_URL || (typeof window !== "undefined" ? window.location.origin : "")}/room/${roomId}`}
                   gameLabel={GAME_LABELS[roomMeta.gameType]}
                   locations={roomMeta.locations}
                 />

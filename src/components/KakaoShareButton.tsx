@@ -33,7 +33,8 @@ export default function KakaoShareButton(props: Props) {
       window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY);
     }
 
-    const imageUrl = `${window.location.origin}/opengraph-image`;
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+    const imageUrl = `${baseUrl}/opengraph-image`;
 
     if (props.type === "room") {
       window.Kakao.Share.sendDefault({

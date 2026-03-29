@@ -61,7 +61,8 @@ export default function ResultPage({
     return { name: loc.name, count: matched.length, players: matched.map((p) => p.nickname) };
   });
   const maxCount = Math.max(...locationCounts.map((l) => l.count), 1);
-  const roomUrl = typeof window !== "undefined" ? `${window.location.origin}/room/${id}` : `/room/${id}`;
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (typeof window !== "undefined" ? window.location.origin : "");
+  const roomUrl = `${baseUrl}/room/${id}`;
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
