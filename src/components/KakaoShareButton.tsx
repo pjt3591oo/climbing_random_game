@@ -25,9 +25,12 @@ type Props = RoomShareProps | ResultShareProps;
 
 export default function KakaoShareButton(props: Props) {
   const handleShare = () => {
-    if (!window.Kakao?.isInitialized()) {
-      alert("카카오 SDK가 아직 로드되지 않았습니다. 잠시 후 다시 시도해주세요.");
+    if (!window.Kakao) {
+      alert("카카오 SDK가 로드되지 않았습니다. 잠시 후 다시 시도해주세요.");
       return;
+    }
+    if (!window.Kakao.isInitialized()) {
+      window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY);
     }
 
     if (props.type === "room") {
