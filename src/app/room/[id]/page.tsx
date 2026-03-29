@@ -1,8 +1,8 @@
 "use client";
 
 import { use, useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import NicknameInput from "@/components/NicknameInput";
-import PlaySummary from "@/components/PlaySummary";
 import Roulette from "@/components/Roulette";
 import Ladder from "@/components/Ladder";
 import CardFlip from "@/components/CardFlip";
@@ -10,7 +10,7 @@ import DrawLots from "@/components/DrawLots";
 import { GameRoom } from "@/types/game";
 import Link from "next/link";
 
-type Step = "nickname" | "playing" | "result";
+type Step = "nickname" | "playing";
 
 const GAME_LABELS: Record<string, string> = {
   roulette: "🎡 룰렛",
@@ -25,11 +25,11 @@ export default function RoomPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+  const router = useRouter();
   const [room, setRoom] = useState<GameRoom | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [step, setStep] = useState<Step>("nickname");
   const [nickname, setNickname] = useState("");
-  const [result, setResult] = useState<string | null>(null);
 
   const fetchRoom = useCallback(async () => {
     const res = await fetch(`/api/rooms/${id}`);
@@ -45,20 +45,13 @@ export default function RoomPage({
   };
 
   const handleResult = async (selected: string) => {
-    setResult(selected);
-    await fetch(`/api/rooms/${id}/play`, {
+    const res = await fetch(`/api/rooms/${id}/play`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ nickname, result: selected }),
     });
-    const updated = await fetch(`/api/rooms/${id}`).then((r) => r.json());
-    setRoom(updated);
-    setStep("result");
-  };
-
-  const handlePlayAgain = () => {
-    setStep("playing");
-    setResult(null);
+    const play = await res.json();
+    router.push(`/room/${id}/result?playId=${play.id}`);
   };
 
   if (notFound) {
@@ -119,18 +112,6 @@ export default function RoomPage({
               <DrawLots locations={locationNames} onResult={handleResult} />
             )}
           </div>
-        )}
-
-        {step === "result" && result && (
-          <PlaySummary
-            myNickname={nickname}
-            myResult={result}
-            plays={room.plays}
-            locations={room.locations}
-            roomId={id}
-            gameType={room.gameType}
-            onPlayAgain={handlePlayAgain}
-          />
         )}
       </main>
     </div>
