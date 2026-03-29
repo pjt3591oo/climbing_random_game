@@ -34,7 +34,7 @@ export default function Roulette({ locations, onResult }: Props) {
 
     setTimeout(() => {
       const normalizedAngle = totalRotation % 360;
-      const pointerAngle = (360 - normalizedAngle + 90) % 360;
+      const pointerAngle = (360 - normalizedAngle) % 360;
       const selectedIndex = Math.floor(pointerAngle / segmentAngle) % locations.length;
       const selected = locations[selectedIndex];
 
