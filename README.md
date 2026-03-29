@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧗 Climbing Random
 
-## Getting Started
+클라이밍 모임에서 오늘 갈 장소를 미니게임으로 재미있게 결정하는 웹 앱
 
-First, run the development server:
+**🔗 [randomgame-bice.vercel.app](https://randomgame-bice.vercel.app)**
+
+## 사용 방법
+
+### 방장 (Host)
+1. 클라이밍장 후보 장소 입력 (최소 2개)
+2. 게임 유형 선택
+3. 방 생성 후 링크를 멤버들에게 공유
+
+### 참가자 (Player)
+1. 공유받은 링크로 접속
+2. 닉네임 입력
+3. 게임 플레이 → 장소 선택됨
+4. 결과 화면에서 전체 참가자 현황 확인
+
+## 게임 유형
+
+| 게임 | 설명 |
+|------|------|
+| 🎡 룰렛 | 원형 룰렛을 돌려서 장소 선택 |
+| 🪜 사다리 타기 | 사다리를 타고 장소 선택 |
+| 🃏 카드 뒤집기 | 뒤집어진 카드 중 하나를 선택 |
+| 🎋 제비뽑기 | 제비통에서 제비를 뽑아 장소 선택 |
+
+## 기술 스택
+
+- **Frontend / Backend** – Next.js 16 (App Router)
+- **DB** – PostgreSQL (Supabase)
+- **ORM** – Prisma 7
+- **UI** – Tailwind CSS, Framer Motion
+- **배포** – Vercel
+
+## 로컬 실행
+
+### 사전 준비
+- Node.js 20+
+- Docker (로컬 DB용)
+
+### 설치 및 실행
 
 ```bash
+# 의존성 설치
+npm install
+
+# 로컬 PostgreSQL 실행
+docker compose up -d
+
+# .env 설정
+cp .env.example .env
+# DATABASE_URL 수정
+
+# DB 마이그레이션
+npm run db:migrate
+
+# 개발 서버 실행
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`http://localhost:3000` 접속
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 환경 변수
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+# 로컬
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/climbing_game"
 
-## Learn More
+# Supabase (프로덕션)
+DATABASE_URL="postgresql://postgres.[project-ref]:[password]@aws-0-[region].pooler.supabase.com:6543/postgres"
+```
 
-To learn more about Next.js, take a look at the following resources:
+## DB 스크립트
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run db:generate      # Prisma 클라이언트 재생성
+npm run db:migrate       # 마이그레이션 생성 및 적용 (개발)
+npm run db:migrate:prod  # 마이그레이션 적용 (프로덕션)
+npm run db:push          # 스키마 직접 반영 (마이그레이션 없이)
+npm run db:studio        # Prisma Studio (DB GUI)
+npm run db:reset         # DB 초기화
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 배포
 
-## Deploy on Vercel
+GitHub push 시 Vercel이 자동으로 재배포합니다.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+빌드 시 아래 순서로 실행됩니다:
+1. `prisma generate` – Prisma 클라이언트 생성
+2. `prisma migrate deploy` – 마이그레이션 적용
+3. `next build` – Next.js 빌드
